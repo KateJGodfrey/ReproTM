@@ -1,0 +1,10 @@
+derivatives/
+output_logs/
+all_data/
+python_seed_map*
+matlab_seed_map/
+
+
+*.asv
+age_*
+*.png
