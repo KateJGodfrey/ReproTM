@@ -226,7 +226,7 @@ if run_template_matching:
                 # tmap is vector, representing the template map for network 'j' greyordinates that aren't NaN
                 tmap = cifti_template_mat_full[goodvox,j]
                 
-                # calculation of eta values using RH within and between sum of squares ##########################################
+                # calculation of eta values using within and between sum of squares ##########################################
                 # calculate the grand mean across all elements of tmap and cmap
                 Mgrand  = ((np.sum(tmap)/(tmap.shape[1])) + (np.sum(cmap)/(cmap.shape[1]))) / 2
                 # calculate the element-wise mean of cmap and tmap to produce a vector of the same length as cmap and tmap
@@ -320,7 +320,7 @@ if refineSCAN:
                     # if cmap and tmap are not zero calculate effect size as usual
                     else:
                         
-                        # calculation of eta values using RH within and between sum of squares ##########################################
+                        # calculation of eta values using within and between sum of squares ##########################################
                         # calculate the grand mean across all elements of tmap and cmap
                         Mgrand = (np.mean(tmap) + np.mean(cmap)) / 2
                         # calculate the element-wise mean of cmap and tmap to produce a vector of the same length as cmap and tmap
