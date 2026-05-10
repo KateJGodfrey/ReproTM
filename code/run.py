@@ -25,6 +25,10 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
+global zscore_script, repro_tm_script, minsize_script
+zscore_script=Path('./zscore_dconn/zscore_dconn_v1.0.0.py')
+repro_tm_script=Path('./ReproTM/ReproTM_v1.0.0.py')
+minsize_script=Path('./minsize/minsize_v1.0.0.py')
 
 # ---------------------------------------------------------------------------
 # Argument parsing
@@ -65,15 +69,15 @@ def build_parser() -> argparse.ArgumentParser:
 
     # --- Code paths ---
     code = p.add_argument_group("Code / tool paths")
-    code.add_argument("--zscore_script", type=Path,
-                      default=Path("/projects/standard/midb_abcd/shared/ABCC/code/precision_mapping_via_template_matching/code/zscore_dconn/zscore_dconn_v1.0.0.py"),
-                      help="Path to zscore_dconn_v1.0.0.py.")
-    code.add_argument("--repro_tm_script", type=Path,
-                      default=Path("/projects/standard/midb_abcd/shared/ABCC/code/precision_mapping_via_template_matching/code/ReproTM/ReproTM_v1.0.0.py"),
-                      help="Path to ReproTM_v1.0.0.py.")
-    code.add_argument("--minsize_script", type=Path,
-                      default=Path("/projects/standard/midb_abcd/shared/ABCC/code/precision_mapping_via_template_matching/code/minsize/minsize_v1.0.0.py"),
-                      help="Path to minsize_v1.0.0.py.")
+    # code.add_argument("--zscore_script", type=Path,
+    #                   default=Path("/projects/standard/midb_abcd/shared/ABCC/code/precision_mapping_via_template_matching/code/zscore_dconn/zscore_dconn_v1.0.0.py"),
+    #                   help="Path to zscore_dconn_v1.0.0.py.")
+    # code.add_argument("--repro_tm_script", type=Path,
+    #                   default=Path("/projects/standard/midb_abcd/shared/ABCC/code/precision_mapping_via_template_matching/code/ReproTM/ReproTM_v1.0.0.py"),
+    #                   help="Path to ReproTM_v1.0.0.py.")
+    # code.add_argument("--minsize_script", type=Path,
+    #                   default=Path("/projects/standard/midb_abcd/shared/ABCC/code/precision_mapping_via_template_matching/code/minsize/minsize_v1.0.0.py"),
+    #                   help="Path to minsize_v1.0.0.py.")
     code.add_argument("--wb_command", type=Path, required=True,
                       default=Path("wb_command"),
                       help="Path to Connectome Workbench wb_command executable.")
@@ -186,6 +190,7 @@ def discover_tasks(func_dir: Path, task_labels) -> list:
 
 def step1_zscore(args, dconn_in, sub, ses, task, bids_dir, output_dir):
     """Z-score a dconn file."""
+    log.info("######## Running z-score ########")
     dconn_out_dir = output_dir / f"sub-{sub}" / f"ses-{ses}" / "func"
     dconn_out = dconn_out_dir / f"sub-{sub}_ses-{ses}_task-{task}_stat-zscored.dconn.nii"
 
@@ -196,7 +201,7 @@ def step1_zscore(args, dconn_in, sub, ses, task, bids_dir, output_dir):
         return None
 
     cmd = [
-        sys.executable, "-u", str(args.zscore_script),
+        sys.executable, "-u", str(zscore_script),
         "--dconn_infile", str(dconn_in),
         "--dconn_outfile", str(dconn_out),
     ]
@@ -211,9 +216,10 @@ def step2_repro_tm(args, sub, ses, task, template, zscored_dconn, output_dir):
     mat_out       = out_dir / f"sub-{sub}_ses-{ses}_task-{task}_ReproTM_template-{template}.mat"
     dscalar_out   = out_dir / f"sub-{sub}_ses-{ses}_task-{task}_ReproTM_template-{template}.dscalar.nii"
     dscalar_scan  = out_dir / f"sub-{sub}_ses-{ses}_task-{task}_ReproTM_template-{template}_refine-SCAN.dscalar.nii"
+    log.info("######## Running template matching ########")
 
     cmd = [
-        sys.executable, "-u", str(args.repro_tm_script),
+        sys.executable, "-u", str(repro_tm_script),
         "--dconn_infile",    str(zscored_dconn),
         "--template_infile", str(args.template_infile),
         "--template_networks", *args.template_networks.split(),
@@ -235,8 +241,9 @@ def step2_repro_tm(args, sub, ses, task, template, zscored_dconn, output_dir):
     return dscalar_out, dscalar_scan
 
 
-def step3_minsize(args, sub, ses, task, dscalar_in, template, output_dir):
+def step3_minsize(args, sub, ses, dscalar_in, output_dir):
     """Remove networks below minimum vertex size."""
+    log.info("######## Running Python min-size cleanup ########")
     out_dir = output_dir / f"sub-{sub}" / f"ses-{ses}" / "func"
     ensure_dir(out_dir, args.dry_run)
 
@@ -246,16 +253,46 @@ def step3_minsize(args, sub, ses, task, dscalar_in, template, output_dir):
         f"{filename_stem}_minsize-{args.minsize}.dscalar.nii"
 
     cmd = [
-        sys.executable, str(args.minsize_script),
+        sys.executable, str(minsize_script),
         "--dscalar_infile",  str(dscalar_in),
         "--dscalar_outfile", str(dscalar_out),
         "--minsize",         str(args.minsize),
     ]
+    log.info("############ Cleaning networks below %d threshold ############", args.minsize)
     run_cmd(cmd, args.dry_run)
     return dscalar_out
 
+def step3_minsize_matlab(args, sub, ses, dscalar_in, output_dir):
+    """Remove networks below minimum vertex size using MATLAB."""
+    log.info("######## Running MATLAB minsize cleanup ########")
+    out_dir = output_dir / f"sub-{sub}" / f"ses-{ses}" / "func"
+    ensure_dir(out_dir, args.dry_run)
 
-def step4_dlabel(args, sub, ses, task, dscalar_in, output_dir):
+    filename_stem = dscalar_in.stem.replace(".dscalar", "")
+    dscalar_out = out_dir / f"{filename_stem}_recolored_minsize{args.minsize}.dscalar.nii"
+
+    log.info("############ Cleaning networks below %d threshold ############", args.minsize)
+
+    # Build MATLAB command
+    matlab_addpath = "addpath(genpath('/projects/standard/midb_abcd/shared/ABCC/code/precision_mapping_via_template_matching/code/minsize'))"
+    matlab_func_call = f"clean_dscalars_by_size_simple_v2('{str(dscalar_in)}',[],[],[],[],{args.minsize},[],0,0,1);"
+    matlab_command = f"{matlab_addpath};{matlab_func_call}"
+    
+    matlab_exec = Path("/common/software/install/migrated/matlab/R2019a/bin/matlab")
+
+    cmd = [
+        str(matlab_exec),
+        "-nodisplay",
+        "-nosplash",
+        "-batch",
+        matlab_command,
+    ]
+    # log.info("MATLAB minsize command: %s", matlab_command)
+    run_cmd(cmd, args.dry_run)
+    
+    return dscalar_out
+
+def step4_dlabel(args, sub, ses, dscalar_in, output_dir):
     """Convert dscalar to dlabel using wb_command."""
     out_dir = output_dir / f"sub-{sub}" / f"ses-{ses}" / "func"
     ensure_dir(out_dir, args.dry_run)
@@ -280,20 +317,20 @@ def step4_dlabel(args, sub, ses, task, dscalar_in, output_dir):
 
 def validate_args(args):
     errors = []
-
-    if not args.skip_zscore and not args.zscore_script.exists():
-        errors.append(f"zscore_script not found: {args.zscore_script}")
+    
+    if not args.skip_zscore and not zscore_script.exists():
+        errors.append(f"zscore_script not found: {zscore_script}")
 
     if not args.skip_repro_tm:
-        if not args.repro_tm_script.exists():
-            errors.append(f"repro_tm_script not found: {args.repro_tm_script}")
+        if not repro_tm_script.exists():
+            errors.append(f"repro_tm_script not found: {repro_tm_script}")
         if args.template_infile is None:
             errors.append("--template_infile is required for step 2 (template matching).")
         elif not args.template_infile.exists():
             errors.append(f"template_infile not found: {args.template_infile}")
 
-    if not args.skip_minsize and not args.minsize_script.exists():
-        errors.append(f"minsize_script not found: {args.minsize_script}")
+    if not args.skip_minsize and not minsize_script.exists():
+        errors.append(f"minsize_script not found: {minsize_script}")
 
     if not args.skip_dlabel:
         if args.label_file is None:
@@ -388,24 +425,29 @@ def main():
                         args, sub, ses, task, template, zscored, output_dir)
                 else:
                     dscalar = (output_dir / f"sub-{sub}" / f"ses-{ses}" / "func" /
-                               f"sub-{sub}_ses-{ses}_task-{task}_ReproTM_template-{template}_refine-SCAN.dscalar.nii")
+                               f"sub-{sub}_ses-{ses}_task-{task}_ReproTM_template-{template}.dscalar.nii")
+                    if args.refineSCAN:
+                        dscalar_scan = (output_dir / f"sub-{sub}" / f"ses-{ses}" / "func" /
+                                        f"sub-{sub}_ses-{ses}_task-{task}_ReproTM_template-{template}_refine-SCAN.dscalar.nii")
                     log.info("Skipping step 2; expecting dscalar at: %s", dscalar)
 
                 # ── Step 3: min-size cleanup ──────────────────────────────
                 if not args.skip_minsize:
-                    dscalar_clean = step3_minsize(
-                        args, sub, ses, task, dscalar, template, output_dir)
+                    dscalar_clean = step3_minsize_matlab(
+                        args, sub, ses, dscalar, output_dir)
                     if args.refineSCAN:
                         log.info("RefineSCAN enabled; using SCAN-refined dscalar for min-size cleanup.")
-                        dscalar_clean = step3_minsize(
-                            args, sub, ses, task, dscalar_scan, template, output_dir)
+                        dscalar_clean_scan = step3_minsize_matlab(
+                            args, sub, ses, dscalar_scan, output_dir)
                 else:
                     dscalar_clean = dscalar
                     log.info("Skipping step 3 (min-size cleanup).")
 
                 # ── Step 4: dscalar -> dlabel ─────────────────────────────
                 if not args.skip_dlabel:
-                    step4_dlabel(args, sub, ses, task, dscalar_clean, output_dir)
+                    step4_dlabel(args, sub, ses, dscalar_clean, output_dir)
+                    if args.refineSCAN:
+                        step4_dlabel(args, sub, ses, dscalar_clean_scan, output_dir)
                 else:
                     log.info("Skipping step 4 (dlabel conversion).")
 
