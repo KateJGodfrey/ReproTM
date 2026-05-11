@@ -15,8 +15,6 @@ This pipeline takes resting-state fMRI dense connectome files (`.dconn.nii`) org
 
 Each step can be skipped independently.
 
----
-
 ## Requirements
 
 - Python 3
@@ -27,7 +25,6 @@ Each step can be skipped independently.
   - `ReproTM/ReproTM_v1.0.0.py`
   - `minsize/minsize_v1.0.0.py`
 
----
 
 ## Input Data
 
@@ -40,8 +37,6 @@ bids_dir/
         └── func/
             └── sub-<label>_ses-<label>_task-<label>_*.dconn.nii
 ```
-
----
 
 ## Output Data
 
@@ -60,7 +55,6 @@ output_dir/
             └── sub-<label>_ses-<label>_task-<label>_ReproTM_template-<template>_recolored_minsize<N>.dlabel.nii
 ```
 
----
 
 ## Usage
 
@@ -89,7 +83,7 @@ python run.py /data/bids /data/derivatives/repro_tm participant \
   --task_label rest \
   --wb_command /path/to/wb_command \
   --template_infile /path/to/template.mat \
-  --template_networks "DMN Vis FP NaN DAN"
+  --template_networks "DMN Vis FP NaN DAN NaN VAN Sal AMN SMd SMl Aud Tpole MTL PMN PON NaN SCAN"
 ```
 
 ### Dry run (print commands without executing)
@@ -98,11 +92,9 @@ python run.py /data/bids /data/derivatives/repro_tm participant \
 python run.py /data/bids /data/derivatives/repro_tm participant \
   --wb_command /path/to/wb_command \
   --template_infile /path/to/template.mat \
-  --template_networks "DMN Vis FP" \
+  --template_networks "DMN Vis FP NaN DAN NaN VAN Sal AMN SMd SMl Aud Tpole MTL PMN PON NaN SCAN" \
   --dry_run
 ```
-
----
 
 ## Arguments
 
@@ -165,7 +157,6 @@ When a step is skipped, the pipeline expects its outputs to already exist at the
 | `--dry_run` | Print commands without executing them |
 | `--verbose` | Enable debug-level logging |
 
----
 
 ## Template Name Inference
 
@@ -174,8 +165,6 @@ The template name embedded in output filenames is extracted automatically from `
 - Files containing `tpl-` → uses the token after `tpl-` up to the next `_`
 - Files containing `seedmaps-` → uses the token after `seedmaps-`
 - Otherwise → uses the full file stem
-
----
 
 ## Notes
 
