@@ -1,8 +1,6 @@
 # ReproTM: Precision Functional Mapping via Template Matching
 
-A BIDS App that generates individual-level precision functional brain maps by running template matching on dense connectivity (dconn) files.
-
----
+Reproducible Template Matching (ReproTM) (Godfrey et al., in prep) is a set of python tools to facilitate reproducible generation of individualized, person-specific, functional networks using the template matching network detection algorithm (Gordon et al., 2017)
 
 ## Overview
 
