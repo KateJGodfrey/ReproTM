@@ -11,6 +11,7 @@ seepmap_dif_y0_vs_y2.dscalar.nii
 seedmap_dif_y0_vs_y2.dconn.nii
 compare_seed_matrix.py
 convert_seedmap_to_dscalar.py
+inspect_matfiles.m
 
 
 sub-5T*
