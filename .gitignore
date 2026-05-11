@@ -3,6 +3,8 @@ output_logs/
 all_data/
 python_seed_map*
 matlab_seed_map/
+generate_dconns.sh
+convert_hdf5_to_matlab.py
 
 sub-5T*
 *.asv
