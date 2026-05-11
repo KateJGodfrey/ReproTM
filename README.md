@@ -142,7 +142,7 @@ When a step is skipped, the pipeline expects its outputs to already exist at the
 
 | Argument | Default | Description |
 |---|---|---|
-| `--minsize` | `30` | Minimum network size in vertices; smaller networks are removed |
+| `--minsize` | `30` | Minimum network size in greyordinates; network clusters below minimum size are identified and assigned to the mode network assignment of neighboring greyoridinates |
 
 ### dscalar → dlabel Conversion Options
 
