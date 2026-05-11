@@ -1,14 +1,14 @@
-# ReproTM: Precision Functional Mapping via Template Matching
+# ReproTM: Reproducible Template Matching
 
-Reproducible Template Matching (ReproTM) (Godfrey et al., in prep) is a set of python tools to facilitate reproducible generation of individualized, person-specific, functional networks using the template matching network detection algorithm [Gordon et al., 2017](https://www.sciencedirect.com/science/article/pii/S089662731730613X)
+ReproTM (Godfrey et al., in prep) is a set of python tools to facilitate reproducible generation of individualized, person-specific, functional network maps using the template matching network detection algorithm [Gordon et al., 2017](https://www.sciencedirect.com/science/article/pii/S089662731730613X)
 
 ## Overview
 
-This pipeline takes resting-state fMRI dense connectome files (`.dconn.nii`) organized in BIDS format and produces network parcellation maps for each participant. It runs four sequential steps:
+This pipeline takes CIFTI dense connectome files (`.dconn.nii`) organized in BIDS format and produces functional network parcellation maps for each participant. It runs four sequential steps:
 
 1. **Z-score** dconn files
-2. **Template matching** (ReproTM) to generate precision functional maps
-3. **Min-size cleanup** to remove networks below a vertex threshold
+2. **Template matching** (ReproTM) to generate individual functional network maps
+3. **Minimum size cleanup** clean up network clusters below a greyordinate threshold
 4. **Convert** dscalar to dlabel via `wb_command`
 
 Each step can be skipped independently.
@@ -16,8 +16,10 @@ Each step can be skipped independently.
 ## Requirements
 
 - Python 3
+- [Nibabel](https://nipy.org/nibabel/)
+- [NumPy](https://numpy.org/)
+- [SciPy](https://scipy.org/)
 - [Connectome Workbench](https://www.humanconnectome.org/software/connectome-workbench) (`wb_command`)
-- MATLAB with the minsize scripts on the path (for step 3)
 - The following scripts present relative to `run.py`:
   - `zscore_dconn/zscore_dconn_v1.0.0.py`
   - `ReproTM/ReproTM_v1.0.0.py`
