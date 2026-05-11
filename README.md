@@ -1,6 +1,6 @@
 # ReproTM: Reproducible Template Matching
 
-ReproTM (Godfrey et al., in prep) is a set of python tools to facilitate reproducible generation of individualized, person-specific, functional network maps using the template matching network detection algorithm [Gordon et al., 2017](https://www.sciencedirect.com/science/article/pii/S089662731730613X)
+ReproTM (Godfrey et al., in prep) is a set of python tools to facilitate reproducible generation of individualized, person-specific, functional network maps using the template matching network detection algorithm ([Gordon et al., 2017](https://www.sciencedirect.com/science/article/pii/S089662731730613X))
 
 ## Overview
 
