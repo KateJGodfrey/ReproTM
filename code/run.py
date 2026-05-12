@@ -68,16 +68,7 @@ def build_parser() -> argparse.ArgumentParser:
                        help="Skip step 4: dscalar -> dlabel conversion.")
 
     # --- Code paths ---
-    code = p.add_argument_group("Code / tool paths")
-    # code.add_argument("--zscore_script", type=Path,
-    #                   default=Path("/projects/standard/midb_abcd/shared/ABCC/code/precision_mapping_via_template_matching/code/zscore_dconn/zscore_dconn_v1.0.0.py"),
-    #                   help="Path to zscore_dconn_v1.0.0.py.")
-    # code.add_argument("--repro_tm_script", type=Path,
-    #                   default=Path("/projects/standard/midb_abcd/shared/ABCC/code/precision_mapping_via_template_matching/code/ReproTM/ReproTM_v1.0.0.py"),
-    #                   help="Path to ReproTM_v1.0.0.py.")
-    # code.add_argument("--minsize_script", type=Path,
-    #                   default=Path("/projects/standard/midb_abcd/shared/ABCC/code/precision_mapping_via_template_matching/code/minsize/minsize_v1.0.0.py"),
-    #                   help="Path to minsize_v1.0.0.py.")
+    code = p.add_argument_group("tool paths")
     code.add_argument("--wb_command", type=Path, required=True,
                       default=Path("wb_command"),
                       help="Path to Connectome Workbench wb_command executable.")
