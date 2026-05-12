@@ -9,6 +9,11 @@
 #SBATCH -o ReproTM_%j.out
 #SBATCH -e ReproTM_%j.err
 
+# this script can be used to create input variables and call ReproTM
+
+# author: Kate J. Godfrey
+# github: https://github.com/KateJGodfrey/ReproTM
+
 SUB=${1}
 SES=${2}
 TASK=${3}
@@ -37,8 +42,8 @@ fi
 # input filepaths
 # dconn_infile: CIFTI input dconn
 dconn_infile=${dir_data}/sub-${SUB}/ses-${SES}/func/sub-${SUB}_ses-${SES}_task-${TASK}_stat-zscored.dconn.nii
-# template_infile: full path to template, should match the units of input dconn
-template_infile=/*/ReproTM/ReproTM/support_files/network_seedmap_templates/choice_of_template.mat
+# template_infile: full path to template, should match the units of input dconn (linear bivariate or z-scored)
+template_infile=/*/ReproTM/ReproTM/support_files/templates/choice_of_template.mat
 # template_networks: names of your networks, should match template_infile
 template_networks="DMN Vis FP NaN DAN NaN VAN Sal AMN SMd SMl Aud Tpole MTL PMN PON NaN SCAN"
 
