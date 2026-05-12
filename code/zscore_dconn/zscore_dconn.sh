@@ -10,10 +10,10 @@
 #SBATCH -e dconnZ_%j.err
 
 # author: Kate J. Godfrey 
-# email:  godfreykatej@gmail.com 
 # github: https://github.com/KateJGodfrey/ReproTM
 
-# this script converts CIFTI dconn.nii to a CIFTI Z-scored dconn.nii
+# this script can be used to create input variables and call zscore_dconn
+# zscore_dconn converts CIFTI dconn.nii to a CIFTI Z-scored dconn.nii
 
 # the input dconn of cortical and subcortical regions will be Z-scored separately for:
 # i.   each hemisphere
