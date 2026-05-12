@@ -13,6 +13,12 @@ This pipeline takes CIFTI dense connectome files (`.dconn.nii`) organized in BID
 
 Each step can be skipped independently.
 
+>[!CAUTION]
+>Running ReproTM as a BIDSapp with run.py is still under development, current recommendation is to manually run each ReproTM step:
+>1. */code/zscore_dconn/zscore_dconn.sh
+>2. */code/ReproTM/ReproTM.sh
+>3. */code/minsize/minsize.sh
+
 ## Requirements
 
 - Python 3
