@@ -10,11 +10,11 @@
 #SBATCH -e minsize_%j.err
 
 # author: Kate J. Godfrey 
-# email:  godfreykatej@gmail.com 
 # github: https://github.com/KateJGodfrey/ReproTM
 
-# this script identifies network clusters below a minimum size
-# and assigns cluster vertices/greyordinates to the mode of neighbors
+# this script can be used to create input variables and call minsize
+# minsize identifies network clusters below a minimum size (in greyordinates)
+# and assigns cluster vertices/greyordinates to the mode network assignment of neighbors
 
 # user specified terminal inputs
 SUB=${1}
@@ -22,13 +22,13 @@ SES=${2}
 TASK=${3}
 
 # set paths for input and output dscalars
-dir_data=/projects/standard/btervocl/shared/projects/MINT/kgodfrey/ReproTM_dev/test/ReproTM/derivatives/ReproTM
+dir_data=/path/to/your/input/dscalars
 dscalar_infile=${dir_data}/sub-${SUB}/ses-${SES}/func/sub-${SUB}_ses-${SES}_task-${TASK}_ReproTM.dscalar.nii
 dscalar_outfile=${dir_data}/sub-${SUB}/ses-${SES}/func/sub-${SUB}_ses-${SES}_task-${TASK}_ReproTM_minsize30.dscalar.nii
 minsize=30
 
 # python code 
-code_path=/projects/standard/midb_abcd/shared/ABCC/code/precision_mapping_via_template_matching/code/minsize/minsize_v1.0.0.py
+code_path=/*/code/minsize/minsize_v1.0.0.py
 
 # run script
 python ${code_path} --dscalar_infile ${dscalar_infile} --dscalar_outfile ${dscalar_outfile} --minsize 30

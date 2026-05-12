@@ -6,6 +6,9 @@ import numpy as np
 import time
 import argparse
 
+# author: Kate J. Godfrey
+# github: https://github.com/KateJGodfrey/ReproTM
+
 # get the current time
 totaltimer = time.time()
 

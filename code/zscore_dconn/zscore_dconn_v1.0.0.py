@@ -8,7 +8,6 @@
 # source code and Z-scoring method described above taken from Hermisillo et al (2024) (https://doi.org/10.1038/s41593-024-01596-5)
 
 # author: Kate J. Godfrey 
-# email:  godfreykatej@gmail.com 
 # github: https://github.com/KateJGodfrey/ReproTM
 
 # load packages
