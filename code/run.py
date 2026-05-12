@@ -153,6 +153,7 @@ def discover_subjects(bids_dir: Path, participant_labels) -> list:
         if missing:
             log.warning("Requested participants not found in BIDS dir: %s", missing)
         return filtered
+    log.info("No participant labels specified; processing all subjects found in BIDS dir.")
     return all_subs
 
 
@@ -163,7 +164,12 @@ def discover_sessions(sub_dir: Path, session_labels) -> list:
         if d.is_dir() and d.name.startswith("ses-")
     )
     if session_labels:
-        return [s for s in all_ses if s in session_labels]
+        filtered = [s for s in all_ses if s in session_labels]
+        missing = set(session_labels) - set(all_ses)
+        if missing:
+            log.warning("Requested sessions not found in subject directory: %s", missing)
+        return filtered
+    log.info("No session labels specified; processing all sessions found for subject.")
     return all_ses
 
 
@@ -172,6 +178,7 @@ def discover_tasks(func_dir: Path, task_labels) -> list:
     dconn_files = sorted(func_dir.glob("*.dconn.nii"))
     
     if not task_labels:
+        log.info("No task labels specified; processing all dconn files found in func directory.")
         # Return all dconn files if no task filter provided
         return dconn_files
     
@@ -433,11 +440,11 @@ def main():
 
                 # ── Step 3: min-size cleanup ──────────────────────────────
                 if not args.skip_minsize:
-                    dscalar_clean = step3_minsize_matlab(
+                    dscalar_clean = step3_minsize(
                         args, sub, ses, dscalar, output_dir)
                     if args.refineSCAN:
                         log.info("RefineSCAN enabled; using SCAN-refined dscalar for min-size cleanup.")
-                        dscalar_clean_scan = step3_minsize_matlab(
+                        dscalar_clean_scan = step3_minsize(
                             args, sub, ses, dscalar_scan, output_dir)
                 else:
                     dscalar_clean = dscalar
