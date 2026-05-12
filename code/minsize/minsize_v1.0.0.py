@@ -118,7 +118,7 @@ for network in networks:
             if network_assigns.shape[0] == 91282:
                 borderassigns = network_assigns_out[borderverts]; 
             # calculate the mode network assignment of these bordering vertices
-            mode_neighborval = stats.mode(borderassigns)[0][0]
+            mode_neighborval = int((stats.mode(borderassigns)).mode)
             # assign vertices in this cluster to the mode of their neighbors
             network_assigns_out[np.where(clusteredmetric == clusternum)] = mode_neighborval
 
