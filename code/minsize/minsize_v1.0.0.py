@@ -6,7 +6,6 @@ from scipy import stats
 import argparse
 
 # author: Kate J. Godfrey
-# email:  godfreykatej@gmail.com 
 # github: https://github.com/KateJGodfrey/ReproTM
 
 # this script identifies network clusters below a minimum size
