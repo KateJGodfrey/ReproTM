@@ -78,7 +78,7 @@ if hardcode:
     # input file paths
     dir_in='/path/working_dir'
     dconn_infile = '/path/input_dconn_stat-zscored.dconn.nii'
-    template_infile='/*/ReproTM/support_files/network_seedmap_templates/input_template.mat'
+    template_infile='/*/ReproTM/support_files/templates/input_template.mat'
     # output file paths
     mat_outfile='/path/output_ReproTM.mat'
     dscalar_outfile='/path/output_ReproTM.dscalar.nii'
