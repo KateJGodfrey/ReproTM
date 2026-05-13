@@ -56,9 +56,12 @@ output_dir/
             ├── sub-<label>_ses-<label>_task-<label>_stat-zscored.dconn.nii
             ├── sub-<label>_ses-<label>_task-<label>_ReproTM_template-<template>.dscalar.nii
             ├── sub-<label>_ses-<label>_task-<label>_ReproTM_template-<template>.mat
-            ├── sub-<label>_ses-<label>_task-<label>_ReproTM_template-<template>_refine-SCAN.dscalar.nii  # if --refineSCAN
-            ├── sub-<label>_ses-<label>_task-<label>_ReproTM_template-<template>_recolored_minsize<N>.dscalar.nii
-            └── sub-<label>_ses-<label>_task-<label>_ReproTM_template-<template>_recolored_minsize<N>.dlabel.nii
+            ├── sub-<label>_ses-<label>_task-<label>_ReproTM_template-<template>_minsize-<N>.dscalar.nii
+            ├── sub-<label>_ses-<label>_task-<label>_ReproTM_template-<template>_minsize-<N>.dlabel.nii
+             ####### if --refineSCAN, additional outputs ########
+            ├── sub-<label>_ses-<label>_task-<label>_ReproTM_template-<template>_refine-SCAN.dscalar.nii 
+            ├── sub-<label>_ses-<label>_task-<label>_ReproTM_template-<template>_refine-SCAN_minsize-<N>.dscalar.nii
+            └── sub-<label>_ses-<label>_task-<label>_ReproTM_template-<template>_refine-SCAN_minsize-<N>.dlabel.nii
 ```
 
 
