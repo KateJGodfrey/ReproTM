@@ -92,6 +92,10 @@ python run.py /data/bids /data/derivatives/repro_tm participant \
   --template_networks "DMN Vis FP NaN DAN NaN VAN Sal AMN SMd SMl Aud Tpole MTL PMN PON NaN SCAN"
 ```
 
+### Process all subjects and sessions
+
+If `--participant_label` or `--session_label` are omitted, the pipeline will process all `sub-` and `ses-` directories found in the BIDS input directory. The script logs this behavior explicitly when no filters are provided.
+
 ### Dry run (print commands without executing)
 
 ```bash
@@ -119,8 +123,8 @@ python run.py /data/bids /data/derivatives/repro_tm participant \
 
 | Argument | Description |
 |---|---|
-| `--participant_label` | One or more subject labels (without `sub-` prefix) |
-| `--session_label` | One or more session labels (without `ses-` prefix) |
+| `--participant_label` | One or more subject labels (without `sub-` prefix). If omitted, all `sub-` directories in the BIDS root are processed. |
+| `--session_label` | One or more session labels (without `ses-` prefix). If omitted, all `ses-` directories under each subject are processed. |
 | `--task_label` | One or more task labels to filter dconn files |
 
 ### Pipeline Step Toggles
